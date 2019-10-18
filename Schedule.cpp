@@ -99,17 +99,48 @@ int main(int argc, char *argv[]){
 		initialiseLects[i]->name = temp;
 	}
 
-	
+	//get rid of descriptor line
+	getline(file,temp);
+
+	istringstream iss7("");
+	//read in lecturer and class pairings
+	for(int x = 0; x < coursesLength; x++){
+		iss7.clear();
+		iss7.str("");
+		getline(file,temp); 
+		iss7.str(temp);
+		for(int y = 0; y < lectLength; y++){
+			getline(iss7, temp, ',');
+			if(stoi(temp)){
+				// lecturer(j).courses.push_back(course(i))
+				initialiseLects[y]->courses.push_back(&(*initialiseCourses[x]));
+				// course(i).lecturers.push_back(lecturer(j))
+				initialiseCourses[x]->teachers.push_back(&(*initialiseLects[y]));
+			}
+
+		}
+	}
 
 
+	//get rid of descriptor line
+	getline(file,temp);
 
+	//clear iss
+	iss7.clear();
+	iss7.str("");
 
-	//print rest of file
-	while(getline(file,line))
-	{
-		cout<<line<<endl; 
+	for(int i = 0; i < lectLength; i++){
+		iss7.clear();
+		iss7.str("");
+		getline(file,temp); 
+		iss7.str(temp);
+		for(int j  = 0; j < 40; j++){
+			getline(iss7, temp, ',');
+			initialiseLects[i]->preferences[j] = stoi(temp) ;
+		}
 
 	}
+
 	//create optimal timetable - algorithm?
 
 	//output result to fnl_soln.sch
