@@ -101,7 +101,8 @@ int main(int argc, char *argv[]){
 
 	//get rid of descriptor line
 	getline(file,temp);
-
+	
+	//The TL section 
 	istringstream iss7("");
 	//read in lecturer and class pairings
 	for(int x = 0; x < coursesLength; x++){
@@ -143,10 +144,68 @@ int main(int argc, char *argv[]){
 
 	//create optimal timetable - algorithm?
 
+	for(int i=0;i<lectLength;i++)
+	{
+		int temp = initialiseLects[i]->courses[0]->num_hours;
+		vector<int> result; 
+		//testing, will put into a vector when this is solved 
+		int preferencesTemp[40]; 
+
+			int teachCount=0; 
+			//set the lecturers if it's 1s 
+			for(int k=0;k<40;k++)
+			{
+				int checkPref = initialiseLects[i]->preferences[k];
+				//cout<<initialiseLects[i]->courses[0]->name; 
+				/*initialiseCourses[i]->teachers.size() is the 
+				  how many lecturer can teach this course 
+				*/ 
+				if(checkPref==1)
+				{
+					//cout<<initialiseCourses[i]->name;// <-chekc from ADSA up to CS 
+
+					//cout<<initialiseLects[0]->courses[0]->name; //<- cruz EDC only 
+
+					if(initialiseCourses[i]->name==initialiseLects[0]->courses[0]->name)
+					{
+						//uncomment the if statement below to always restrict teaching to 
+						//only 2 hours 
+						//if(teachCount<2)
+						//{
+							preferencesTemp[k]=i+1;
+						//}
+		
+ 
+					}
+					teachCount++;
+
+					/*if(teachCount==2)
+					{
+						teachCount=0; 
+					}*/
+					//cout<<teachCount<<endl; 
+
+					/*this is just checking to see that the courses are the same with 
+					the courses that the lecturer is going to teach */  
+
+
+
+				}
+				//this only prints out cruz 
+				cout<<preferencesTemp[k];
+
+			}
+			cout<<endl; 
+
+	}
+
+
+
 	//output result to fnl_soln.sch
 
 	std::string tempresult = "my text here! \nand a new line"; //for testing purposes only
 	std::ofstream outfile ("fnl_soln.sch");
+	
 
 	outfile <<  tempresult << std::endl;
 
