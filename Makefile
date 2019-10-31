@@ -1,3 +1,3 @@
 all:  Schedule.cpp
-	g++ Schedule.cpp -o schedule
+	g++ -std=c++11 Schedule.cpp -o schedule
 	./schedule simple1.txt

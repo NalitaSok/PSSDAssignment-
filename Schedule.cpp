@@ -2,9 +2,15 @@
 #include <fstream> 
 #include <string> 
 #include <sstream> 
+#include <array> 
+#include <algorithm> 
 
 
 using namespace std; 
+
+
+//function that pushes into a vector; 
+
 
 int main(int argc, char *argv[]){
 
@@ -142,61 +148,60 @@ int main(int argc, char *argv[]){
 
 	}
 
+	vector<string> result; 
 	//create optimal timetable - algorithm?
-
+	int checkPrefCounter = 0; 
 	for(int i=0;i<lectLength;i++)
 	{
 		int temp = initialiseLects[i]->courses[0]->num_hours;
-		vector<int> result; 
 		//testing, will put into a vector when this is solved 
 		int preferencesTemp[40]; 
+		string tempStore;
 
-			int teachCount=0; 
 			//set the lecturers if it's 1s 
 			for(int k=0;k<40;k++)
 			{
-				int checkPref = initialiseLects[i]->preferences[k];
+				int checkPref = initialiseLects[checkPrefCounter]->preferences[k];
 				//cout<<initialiseLects[i]->courses[0]->name; 
 				/*initialiseCourses[i]->teachers.size() is the 
 				  how many lecturer can teach this course 
 				*/ 
-				if(checkPref==1)
-				{
 					//cout<<initialiseCourses[i]->name;// <-chekc from ADSA up to CS 
 
 					//cout<<initialiseLects[0]->courses[0]->name; //<- cruz EDC only 
 
+
+					/*this is just checking to see that the courses are the same with 
+					the courses that the lecturer is going to teach */  
 					if(initialiseCourses[i]->name==initialiseLects[0]->courses[0]->name)
 					{
 						//uncomment the if statement below to always restrict teaching to 
 						//only 2 hours 
-						//if(teachCount<2)
-						//{
-							preferencesTemp[k]=i+1;
-						//}
-		
- 
+							if(checkPref==1)
+							{
+								preferencesTemp[k]=i+1;
+							}
+						
+	
 					}
-					teachCount++;
 
-					/*if(teachCount==2)
-					{
-						teachCount=0; 
-					}*/
-					//cout<<teachCount<<endl; 
-
-					/*this is just checking to see that the courses are the same with 
-					the courses that the lecturer is going to teach */  
-
-
-
-				}
-				//this only prints out cruz 
-				cout<<preferencesTemp[k];
+				tempStore+=to_string(preferencesTemp[k]); 
 
 			}
-			cout<<endl; 
+			//storing.push_back(preferencesTemp); 
+			//cout<<tempStore;
+			result.push_back(tempStore); 
 
+
+			cout<<" " <<checkPrefCounter<<endl; 
+				checkPrefCounter++;
+			//cout<<endl; 
+
+	}
+
+	for(int i=0;i<result.size();i++)
+	{
+		cout<<result.at(i)<<endl;
 	}
 
 
