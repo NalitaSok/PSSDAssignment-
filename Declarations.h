@@ -16,6 +16,7 @@ class Lecturers
     std::vector<Classes*> courses; //the list of courses this lecturer teaches
     //this is a vector of pointers
     
+    
 
 }; 
 
@@ -27,6 +28,8 @@ class Classes
     int num_hours; //number of contact hours that need to be scheduled
     std::vector<Lecturers*> teachers; //list of lecturers who will teach the course
     //this is a vector of pointers
+
+    int finalTimeTable[40]; 
     
     int room; 
     int course; 
