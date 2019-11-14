@@ -7,8 +7,6 @@
 
 using namespace std;
 
-//function that pushes into a vector;
-
 int main(int argc, char *argv[])
 {
 
@@ -185,56 +183,54 @@ int main(int argc, char *argv[])
 								
 								//decrease course hours when they are assigned to a lecturer
 								initialiseLects[j]->courses[k]->num_hours = initialiseLects[j]->courses[k]->num_hours - 1;
-								cout << "adding " << j << endl;
-							}
-						}
-
-						//check every timetable slot for a 2nd preference
-						for (int l = 0; l < 40; l++)
-						{
-							int checkPref = initialiseLects[j]->preferences[l];
-
-							if (l > 2 && (initialiseCourses[i]->finalTimeTable[l - 2] != j || initialiseCourses[i]->finalTimeTable[l - 1] != j))
-							{
-								
-								//check that the course needs more hours and that this slot is empty
-								if (checkPref == 2 && initialiseCourses[i]->num_hours > 0 && initialiseCourses[i]->finalTimeTable[l] == -1)
-								{
-									//restrict teaching to only 2 hours
-									if(l > 2 && (initialiseCourses[i]->finalTimeTable[l-1] != j || initialiseCourses[i]->finalTimeTable[l-2])){
-										initialiseCourses[i]->finalTimeTable[l] = j;
-									}
-									
-									//decrease course hours when they are assigned to a lecturer
-									initialiseLects[j]->courses[k]->num_hours = initialiseLects[j]->courses[k]->num_hours - 1;
-									cout << "adding " << j << endl;
-								}
-							}
-						}
-
-						//check every timetable slot for a last preference
-						for (int l = 0; l < 40; l++)
-						{
-							int checkPref = initialiseLects[j]->preferences[l];
-
-							if (l > 2 && (initialiseCourses[i]->finalTimeTable[l - 2] != j || initialiseCourses[i]->finalTimeTable[l - 1] != j))
-							{
-								
-								//check that the course needs more hours
-								if (checkPref == 5 && initialiseCourses[i]->num_hours > 0 && initialiseCourses[i]->finalTimeTable[l] == -1)
-								{
-									//restrict teaching to only 2 hours
-									if(l > 2 && (initialiseCourses[i]->finalTimeTable[l-1] != j || initialiseCourses[i]->finalTimeTable[l-2])){
-										initialiseCourses[i]->finalTimeTable[l] = j;
-									}
-									
-									//decrease course hours when they are assigned to a lecturer
-									initialiseLects[j]->courses[k]->num_hours = initialiseLects[j]->courses[k]->num_hours - 1;
-									cout << "adding " << j << endl;
-								}
 							}
 						}
 					}
+
+					//check every timetable slot for a 2nd preference
+					for (int l = 0; l < 40; l++)
+					{
+						int checkPref = initialiseLects[j]->preferences[l];
+
+						if (l > 2 && (initialiseCourses[i]->finalTimeTable[l - 2] != j || initialiseCourses[i]->finalTimeTable[l - 1] != j))
+						{
+
+							//check that the course needs more hours and that this slot is empty
+							if (checkPref == 2 && initialiseCourses[i]->num_hours > 0 && initialiseCourses[i]->finalTimeTable[l] == -1)
+							{
+								//restrict teaching to only 2 hours
+								if(l > 2 && (initialiseCourses[i]->finalTimeTable[l-1] != j || initialiseCourses[i]->finalTimeTable[l-2])){
+									initialiseCourses[i]->finalTimeTable[l] = j;
+								}
+
+								//decrease course hours when they are assigned to a lecturer
+								initialiseLects[j]->courses[k]->num_hours = initialiseLects[j]->courses[k]->num_hours - 1;
+							}
+						}
+					}
+
+					//check every timetable slot for a last preference
+					for (int l = 0; l < 40; l++)
+					{
+						int checkPref = initialiseLects[j]->preferences[l];
+
+						if (l > 2 && (initialiseCourses[i]->finalTimeTable[l - 2] != j || initialiseCourses[i]->finalTimeTable[l - 1] != j))
+						{
+
+							//check that the course needs more hours
+							if (checkPref == 5 && initialiseCourses[i]->num_hours > 0 && initialiseCourses[i]->finalTimeTable[l] == -1)
+							{
+								//restrict teaching to only 2 hours
+								if(l > 2 && (initialiseCourses[i]->finalTimeTable[l-1] != j || initialiseCourses[i]->finalTimeTable[l-2])){
+									initialiseCourses[i]->finalTimeTable[l] = j;
+								}
+
+								//decrease course hours when they are assigned to a lecturer
+								initialiseLects[j]->courses[k]->num_hours = initialiseLects[j]->courses[k]->num_hours - 1;
+							}
+						}
+					}
+
 				}
 			}
 		}
@@ -242,10 +238,11 @@ int main(int argc, char *argv[])
 
 
 	//need to add:
-	//check if lecturer has been working too long
+	//check if class runs over lunchtime
 	//check for multiple sessions in a day
 
 
+	//export result timetable into
 	string result2 = "";
 	for (int i = 0; i < coursesLength; i++)
 	{
