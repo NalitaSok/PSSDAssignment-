@@ -2,6 +2,7 @@
 
 vector<vector<int> >  Solution::Timetable;
 
+
 bool Solution::readSolution(string fileName){
 
     //  file format is Timetable.csv 
@@ -14,6 +15,9 @@ bool Solution::readSolution(string fileName){
 
     //first, resize Timetable to be  mC x 40  
     Timetable.resize(courses, vector<int>(40, -1)); 
+
+
+	cout << courses << endl;
 
     bool status;
     // read the allocation matrix, one row at at time 
@@ -37,12 +41,12 @@ bool Solution::readSolution(string fileName){
      }
 
     cout << "Timetable read "  << endl;
-    /*
+ 
     for (int i=0;i<courses;i++)  {
       for (int j=0;j<40;j++)  
             cout <<  Timetable[i][j]  << " " ;
       cout << endl;
-    } */
+    } 
 
   }catch(int e){
       // exception in processing return false
@@ -53,7 +57,6 @@ bool Solution::readSolution(string fileName){
     return true;
 
     }
-
 
 void Solution::printTimetable(const vector < vector <int>>&  solution, const vector <string>& cNames, const vector <string>&  lNames) {
    vector < string> weekdays = {"             Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
@@ -69,6 +72,7 @@ void Solution::printTimetable(const vector < vector <int>>&  solution, const vec
         }
    cout << endl;
    cout << "-----------------------------------------------------------------------------------------------" << endl;
+
    for (int i = 0; i < labelHours.size(); i++) {
      // iterate over solution for first course for each day 
     bool found ;    
@@ -80,6 +84,7 @@ void Solution::printTimetable(const vector < vector <int>>&  solution, const vec
         found = false;
          for (int k = 0; k < courses; k++) {
             if(copysol[k][j]!=-1) {
+		
                  if (!found)  {
                       found  = true;
                       cout <<  "  " << std::setw (4) <<  cNames[k] << "("  << std::left  << std::setw (6) << lNames[copysol[k][j]] << ")    " ;  
@@ -254,5 +259,7 @@ void Solution::printTimetable(const vector < vector <int>>&  solution, const vec
         }
         //we get the average per allocated hours
         sum=sum+failedConstraints;
+
+	cout << sum << " " << totalhours << endl;
         return sum/(double)totalhours;
     }

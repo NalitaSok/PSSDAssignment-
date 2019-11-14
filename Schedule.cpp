@@ -165,24 +165,89 @@ int main(int argc, char *argv[])
 				//check for a match
 				if (initialiseLects[j]->courses[k]->name == initialiseCourses[i]->name)
 				{
+
+					bool placed = false;
+
+
 					//check every timetable slot for a 1st preference
 					for (int l = 0; l < 40; l++)
 					{
 						int checkPref = initialiseLects[j]->preferences[l];
 
-						if (l > 2 && (initialiseCourses[i]->finalTimeTable[l - 2] != j || initialiseCourses[i]->finalTimeTable[l - 1] != j))
+						if ( l > 2 && (initialiseCourses[i]->finalTimeTable[l - 2] != j || initialiseCourses[i]->finalTimeTable[l - 1] != j))
 						{
 							
 							//check that the course needs more hours
-							if (checkPref == 1 && initialiseCourses[i]->num_hours > 0 && initialiseCourses[i]->finalTimeTable[l] == -1)
+							if ((l !=3 && l != 11 && l != 19 && l != 27 && l != 35) && checkPref == 1 && initialiseCourses[i]->num_hours > 0 && initialiseCourses[i]->finalTimeTable[l] == -1)
 							{
-								//restrict teaching to only 2 hours
-								if(l > 2 && (initialiseCourses[i]->finalTimeTable[l-1] != j || initialiseCourses[i]->finalTimeTable[l-2])){
-									initialiseCourses[i]->finalTimeTable[l] = j;
-								}
+									//check if the period runs over the lunch break
+									if(! ((l == 4 || l == 12 || l == 20|| l == 28 || l == 36) && initialiseCourses[i]->finalTimeTable[l - 2]  == j)){
+
+										//check if lecturer has been teaching in the past 2 hours, or will be teaching in the next 2 hours
+										bool past2hr = false;
+										bool past1hr = false;
+										bool next1hr = false;
+										bool next2hr = false;
+										for(int m = 0; m < coursesLength; m++){
+
+											if( l >= 2 && initialiseCourses[m]->finalTimeTable[l - 2] == j)
+											{
+												past2hr = true;
+											}
+
+											if( l >= 1 && initialiseCourses[m]->finalTimeTable[l - 1] == j)
+											{
+												past1hr = true;
+											}
+
+											if(initialiseCourses[m]->finalTimeTable[l + 1] == j)
+											{
+												next1hr = true;
+											}
+
+											if(initialiseCourses[m]->finalTimeTable[l + 2] == j)
+											{
+												next2hr = true;
+											}
+
+										}
+
+										bool limit = false;
+
+										if((past2hr && past1hr) || (next2hr && next1hr)){
+											limit = true;
+										}
+
+										bool lectisfree = true;
+										int coursesScheduled = 0;
+
+										for(int m = 0; m < coursesLength; m++){
+
+											//count how many courses have been scheduled in this period already
+											if(initialiseCourses[m]->finalTimeTable[l] != -1){
+												coursesScheduled++;
+											}
+
+											if(initialiseCourses[m]->finalTimeTable[l] == j)
+											{
+												lectisfree = false;
+											}
+
+										}
+
+										if(lectisfree && coursesScheduled < rooms && !limit){
+											if(!placed || (placed && initialiseCourses[i]->finalTimeTable[l-1] != -1) || (placed && initialiseCourses[i]->finalTimeTable[l+1] != -1)){
+												initialiseCourses[i]->finalTimeTable[l] = j;
+
+												placed = true;
+
+												//decrease course hours when they are assigned to a lecturer
+												initialiseLects[j]->courses[k]->num_hours = initialiseLects[j]->courses[k]->num_hours - 1;
+											}
+										}
+										
+									}
 								
-								//decrease course hours when they are assigned to a lecturer
-								initialiseLects[j]->courses[k]->num_hours = initialiseLects[j]->courses[k]->num_hours - 1;
 							}
 						}
 					}
@@ -196,15 +261,80 @@ int main(int argc, char *argv[])
 						{
 
 							//check that the course needs more hours and that this slot is empty
-							if (checkPref == 2 && initialiseCourses[i]->num_hours > 0 && initialiseCourses[i]->finalTimeTable[l] == -1)
+							if ((l !=3 && l != 11 && l != 19 && l != 27 && l != 35) && checkPref == 2 && initialiseCourses[i]->num_hours > 0 && initialiseCourses[i]->finalTimeTable[l] == -1)
 							{
-								//restrict teaching to only 2 hours
-								if(l > 2 && (initialiseCourses[i]->finalTimeTable[l-1] != j || initialiseCourses[i]->finalTimeTable[l-2])){
-									initialiseCourses[i]->finalTimeTable[l] = j;
-								}
+								
 
-								//decrease course hours when they are assigned to a lecturer
-								initialiseLects[j]->courses[k]->num_hours = initialiseLects[j]->courses[k]->num_hours - 1;
+									//check if the period runs over the lunch break
+									if(! ((l == 4 || l == 12 || l == 20|| l == 28 || l == 36) && initialiseCourses[i]->finalTimeTable[l - 2]  == j)){
+
+										//check if lecturer has been teaching in the past 2 hours, or will be teaching in the next 2 hours
+										bool past2hr = false;
+										bool past1hr = false;
+										bool next1hr = false;
+										bool next2hr = false;
+										for(int m = 0; m < coursesLength; m++){
+
+											if( l >= 2 && initialiseCourses[m]->finalTimeTable[l - 2] == j)
+											{
+												past2hr = true;
+											}
+
+											if( l >= 1 && initialiseCourses[m]->finalTimeTable[l - 1] == j)
+											{
+												past1hr = true;
+											}
+
+											if(initialiseCourses[m]->finalTimeTable[l + 1] == j)
+											{
+												next1hr = true;
+											}
+
+											if(initialiseCourses[m]->finalTimeTable[l + 2] == j)
+											{
+												next2hr = true;
+											}
+
+										}
+
+										bool limit = false;
+
+										if((past2hr && past1hr) || (next2hr && next1hr)){
+											limit = true;
+										}
+
+										bool lectisfree = true;
+
+										int coursesScheduled = 0;
+
+										for(int m = 0; m < coursesLength; m++){
+
+											//count how many courses have been scheduled in this period already
+											if(initialiseCourses[m]->finalTimeTable[l] != -1){
+												coursesScheduled++;
+											}
+
+											if(initialiseCourses[m]->finalTimeTable[l] == j)
+											{
+												lectisfree = false;
+											}
+
+										}
+
+										if(lectisfree && coursesScheduled < rooms && !limit){
+
+											if(!placed || (placed && initialiseCourses[i]->finalTimeTable[l-1] != -1) || (placed && initialiseCourses[i]->finalTimeTable[l+1] != -1)){
+												initialiseCourses[i]->finalTimeTable[l] = j;
+
+												placed = true;
+
+												//decrease course hours when they are assigned to a lecturer
+												initialiseLects[j]->courses[k]->num_hours = initialiseLects[j]->courses[k]->num_hours - 1;
+											}
+											
+										}
+									}
+								
 							}
 						}
 					}
@@ -218,28 +348,90 @@ int main(int argc, char *argv[])
 						{
 
 							//check that the course needs more hours
-							if (checkPref == 5 && initialiseCourses[i]->num_hours > 0 && initialiseCourses[i]->finalTimeTable[l] == -1)
+							if ((l !=3 && l != 11 && l != 19 && l != 27 && l != 35) && checkPref == 5 && initialiseCourses[i]->num_hours > 0 && initialiseCourses[i]->finalTimeTable[l] == -1)
 							{
-								//restrict teaching to only 2 hours
-								if(l > 2 && (initialiseCourses[i]->finalTimeTable[l-1] != j || initialiseCourses[i]->finalTimeTable[l-2])){
-									initialiseCourses[i]->finalTimeTable[l] = j;
-								}
+								
 
-								//decrease course hours when they are assigned to a lecturer
-								initialiseLects[j]->courses[k]->num_hours = initialiseLects[j]->courses[k]->num_hours - 1;
+									//check if the period runs over the lunch break
+									if(! ((l == 4 || l == 12 || l == 20|| l == 28 || l == 36) && initialiseCourses[i]->finalTimeTable[l - 2]  == j)){
+
+										//check if lecturer has been teaching in the past 2 hours, or will be teaching in the next 2 hours
+										bool past2hr = false;
+										bool past1hr = false;
+										bool next1hr = false;
+										bool next2hr = false;
+										for(int m = 0; m < coursesLength; m++){
+
+											if( l >= 2 && initialiseCourses[m]->finalTimeTable[l - 2] == j)
+											{
+												past2hr = true;
+											}
+
+											if( l >= 1 && initialiseCourses[m]->finalTimeTable[l - 1] == j)
+											{
+												past1hr = true;
+											}
+
+											if(initialiseCourses[m]->finalTimeTable[l + 1] == j)
+											{
+												next1hr = true;
+											}
+
+											if(initialiseCourses[m]->finalTimeTable[l + 2] == j)
+											{
+												next2hr = true;
+											}
+
+										}
+
+										bool limit = false;
+
+										if((past2hr && past1hr) || (next2hr && next1hr)){
+											limit = true;
+										}
+
+
+										bool lectisfree = true;
+
+										int coursesScheduled = 0;
+
+										for(int m = 0; m < coursesLength; m++){
+
+											//count how many courses have been scheduled in this period already
+											if(initialiseCourses[m]->finalTimeTable[l] != -1){
+												coursesScheduled++;
+											}
+
+											if(initialiseCourses[m]->finalTimeTable[l] == j)
+											{
+												lectisfree = false;
+											}
+
+										}
+
+										if(lectisfree && coursesScheduled < rooms && !limit){
+											if(!placed || (placed && initialiseCourses[i]->finalTimeTable[l-1] != -1) || (placed && initialiseCourses[i]->finalTimeTable[l+1] != -1)){
+												initialiseCourses[i]->finalTimeTable[l] = j;
+
+												placed = true;
+
+												//decrease course hours when they are assigned to a lecturer
+												initialiseLects[j]->courses[k]->num_hours = initialiseLects[j]->courses[k]->num_hours - 1;
+											}
+										}
+									}
+								
 							}
 						}
 					}
-
 				}
 			}
 		}
 	}
 
-
 	//need to add:
-	//check if class runs over lunchtime
 	//check for multiple sessions in a day
+	//check if lecturer is teaching too many classes without a break aross courses
 
 
 	//export result timetable into
